@@ -1,0 +1,73 @@
+exports.handler = function(event, context, callback) {
+    var AWS = require('aws-sdk');
+    AWS.config.region = 'us-west-2';
+    var cloudwatch = new AWS.CloudWatch();
+
+    var Ping_domain = (event.domain === undefined ? 'example.com' : event.domain);
+    var Ping_protocol = (event.protocol === undefined ? 'https' : event.protocol);
+    var Ping_port = (event.port === undefined ? 443 : event.port);
+    var Ping_path = (event.path === undefined ? '/' : event.path);
+    var Ping_method = (event.method === undefined ? 'GET' : event.method);
+    var Ping_success = 0;
+    var Ping_responsetime = 0;
+    
+    const http = require(Ping_protocol);
+    
+    var options = {
+        hostname: Ping_domain,
+        port: Ping_port,
+        path: Ping_path,
+        method: Ping_method
+    };
+
+    var start = new Date();
+    var req = http.request(options, (res) => {
+        Ping_responsetime = (new Date() - start); 
+        if (res.statusCode == '200') { Ping_success = 1 } else { Ping_success = 0 } 
+        console.log('statusCode:', res.statusCode);
+        console.log('Request took:', Ping_responsetime.toFixed(1), 'ms');
+        console.log('Request success:', Ping_success.toFixed(1));
+    
+        var params = {
+            MetricData: [
+                {
+                    MetricName: 'Available', /* required */
+                    Dimensions: [
+                        {
+                            Name: 'Destination', /* required */
+                            Value: Ping_domain /* required */
+                        },
+                    ],
+                    Timestamp: + Math.floor(new Date() / 1000),
+                    Unit: 'None',
+                    Value: + Ping_success.toFixed(1) 
+                },
+                {
+                    MetricName: 'Response Time', /* required */
+                    Dimensions: [
+                        {
+                            Name: 'Destination', /* required */
+                            Value: Ping_domain /* required */
+                        },
+                    ],
+                    Timestamp: + Math.floor(new Date() / 1000),
+                    Unit: 'Milliseconds',
+                    Value: + Ping_responsetime.toFixed(1)
+                }
+            ],
+            Namespace: 'AWS LambdaPing' /* required */
+        };
+        
+        cloudwatch.putMetricData(params, function(err, data) {
+            if (err) { 
+                console.log(err, err.stack);
+                callback("Ping Failed");
+            } else {
+                console.log(data);
+                callback(null, "Ping data delivered");
+            }
+        });
+    });
+
+    req.end();
+};
