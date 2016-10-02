@@ -1,5 +1,6 @@
 # AWSLambda_CloudPing
 AWS Lambda Function to monitor a website's availability via HTTP/HTTPS.
+![Screenshot](https://github.com/chriselsen/AWSLambda_CloudPing/raw/master/AWSLambdaPing.PNG)
 
 **Pre-Requisites:**
 * Role for Lambda that allows put-metric access to Amazon CloudWatch
