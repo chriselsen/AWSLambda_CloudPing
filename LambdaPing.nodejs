@@ -23,7 +23,7 @@ exports.handler = function(event, context, callback) {
     var start = new Date();
     var req = http.request(options, (res) => {
         Ping_responsetime = (new Date() - start); 
-        if (res.statusCode == '200') { Ping_success = 1 } else { Ping_success = 0 } 
+        if (res.statusCode < '400') { Ping_success = 1 } else { Ping_success = 0 } 
         console.log('statusCode:', res.statusCode);
         console.log('Request took:', Ping_responsetime.toFixed(1), 'ms');
         console.log('Request success:', Ping_success.toFixed(1));
