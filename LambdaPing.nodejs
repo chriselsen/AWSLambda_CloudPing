@@ -70,4 +70,34 @@ exports.handler = function(event, context, callback) {
     });
 
     req.end();
+    
+    req.on('error', (e) => {
+        var params = {
+            MetricData: [
+                {
+                    MetricName: 'Available', /* required */
+                    Dimensions: [
+                        {
+                            Name: 'Destination', /* required */
+                            Value: Ping_domain /* required */
+                        },
+                    ],
+                    Timestamp: + Math.floor(new Date() / 1000),
+                    Unit: 'None',
+                    Value: 0 
+                }
+            ],
+            Namespace: 'AWS LambdaPing' /* required */
+        };
+        
+        cloudwatch.putMetricData(params, function(err, data) {
+            if (err) { 
+                console.log(err, err.stack);
+                callback("Ping Failed");
+            } else {
+                console.log(data);
+                callback(null, "Ping data delivered");
+            }
+        });
+    });
 };
