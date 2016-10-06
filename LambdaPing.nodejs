@@ -1,8 +1,4 @@
 exports.handler = function(event, context, callback) {
-    var AWS = require('aws-sdk');
-    AWS.config.region = 'us-west-2';
-    var cloudwatch = new AWS.CloudWatch();
-
     var Ping_domain = (event.domain === undefined ? 'example.com' : event.domain);
     var Ping_protocol = (event.protocol === undefined ? 'https' : event.protocol);
     var Ping_port = (event.port === undefined ? 443 : event.port);
@@ -27,32 +23,47 @@ exports.handler = function(event, context, callback) {
         console.log('statusCode:', res.statusCode);
         console.log('Request took:', Ping_responsetime.toFixed(1), 'ms');
         console.log('Request success:', Ping_success.toFixed(1));
+        
+        putCloudWatch(Ping_domain,Ping_success,Ping_responsetime, callback);
+    });
+
+    req.end();
+
+    req.on('error', (e) => {
+        putCloudWatch(Ping_domain,0,'', callback);
+    });
+};
+
+function putCloudWatch(Domain, Success, ResponseTime, callback){
+    var AWS = require('aws-sdk');
+    AWS.config.region = 'us-west-2';
+    var cloudwatch = new AWS.CloudWatch();
     
-        var params = {
+    var params = {
             MetricData: [
                 {
                     MetricName: 'Available', /* required */
                     Dimensions: [
                         {
                             Name: 'Destination', /* required */
-                            Value: Ping_domain /* required */
+                            Value: Domain /* required */
                         },
                     ],
                     Timestamp: + Math.floor(new Date() / 1000),
                     Unit: 'None',
-                    Value: + Ping_success.toFixed(1) 
+                    Value: + Success.toFixed(1) 
                 },
                 {
                     MetricName: 'Response Time', /* required */
                     Dimensions: [
                         {
                             Name: 'Destination', /* required */
-                            Value: Ping_domain /* required */
+                            Value: Domain /* required */
                         },
                     ],
                     Timestamp: + Math.floor(new Date() / 1000),
                     Unit: 'Milliseconds',
-                    Value: + Ping_responsetime.toFixed(1)
+                    Value: + ResponseTime.toFixed(1)
                 }
             ],
             Namespace: 'AWS LambdaPing' /* required */
@@ -67,37 +78,4 @@ exports.handler = function(event, context, callback) {
                 callback(null, "Ping data delivered");
             }
         });
-    });
-
-    req.end();
-    
-    req.on('error', (e) => {
-        var params = {
-            MetricData: [
-                {
-                    MetricName: 'Available', /* required */
-                    Dimensions: [
-                        {
-                            Name: 'Destination', /* required */
-                            Value: Ping_domain /* required */
-                        },
-                    ],
-                    Timestamp: + Math.floor(new Date() / 1000),
-                    Unit: 'None',
-                    Value: 0 
-                }
-            ],
-            Namespace: 'AWS LambdaPing' /* required */
-        };
-        
-        cloudwatch.putMetricData(params, function(err, data) {
-            if (err) { 
-                console.log(err, err.stack);
-                callback("Ping Failed");
-            } else {
-                console.log(data);
-                callback(null, "Ping data delivered");
-            }
-        });
-    });
-};
+}
