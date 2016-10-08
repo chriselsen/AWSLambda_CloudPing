@@ -28,7 +28,7 @@ exports.handler = function(event, context, callback) {
         putCloudWatch(Ping_domain,Ping_success,Ping_responsetime, callback);
     });
     
-    req.setTimeout(10000);
+    req.setTimeout(20000);
 
     req.end();
 
