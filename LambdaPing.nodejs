@@ -23,6 +23,7 @@ exports.handler = function(event, context, callback) {
         console.log('statusCode:', res.statusCode);
         console.log('Request took:', Ping_responsetime.toFixed(1), 'ms');
         console.log('Request success:', Ping_success.toFixed(1));
+        console.log('Region:', process.env.AWS_DEFAULT_REGION);
         
         putCloudWatch(Ping_domain,Ping_success,Ping_responsetime, callback);
     });
@@ -50,7 +51,7 @@ function putCloudWatch(Domain, Success, ResponseTime, callback){
                         },
                     ],
                     Timestamp: + Math.floor(new Date() / 1000),
-                    Unit: 'None',
+                    Unit: 'Count',
                     Value: + Success.toFixed(1) 
                 },
                 {
@@ -58,7 +59,7 @@ function putCloudWatch(Domain, Success, ResponseTime, callback){
                     Dimensions: [
                         {
                             Name: 'Destination', /* required */
-                            Value: Domain /* required */
+                            Value: Domain + "_" + process.env.AWS_DEFAULT_REGION /* required */
                         },
                     ],
                     Timestamp: + Math.floor(new Date() / 1000),
@@ -66,7 +67,7 @@ function putCloudWatch(Domain, Success, ResponseTime, callback){
                     Value: + ResponseTime.toFixed(1)
                 }
             ],
-            Namespace: 'AWS LambdaPing' /* required */
+            Namespace: 'LambdaPing' /* required */
         };
         
         cloudwatch.putMetricData(params, function(err, data) {
