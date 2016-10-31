@@ -17,7 +17,7 @@ exports.handler = function(event, context, callback) {
     };
 
     var start = new Date();
-    var req = http.request(options, (res) => {
+    var req = http.request(options, function(res) {
         Ping_responsetime = (new Date() - start); 
         if (res.statusCode < '400') { Ping_success = 1 } else { Ping_success = 0 } 
         console.log('statusCode:', res.statusCode);
@@ -32,7 +32,7 @@ exports.handler = function(event, context, callback) {
 
     req.end();
 
-    req.on('error', (e) => {
+    req.on('error', function(e) {
         putCloudWatch(Ping_domain,0,'', callback);
     });
 };
