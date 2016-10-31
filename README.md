@@ -1,4 +1,4 @@
-# AWSLambda_CloudPing
+# AWSLambda_CloudPing [![Build Status](https://travis-ci.org/chriselsen/AWSLambda_CloudPing.svg?branch=master)](https://travis-ci.org/chriselsen/AWSLambda_CloudPing)
 AWS Lambda Function to monitor a website's availability via HTTP/HTTPS.
 ![Screenshot](https://github.com/chriselsen/AWSLambda_CloudPing/raw/master/AWSLambdaPing.PNG)
 
