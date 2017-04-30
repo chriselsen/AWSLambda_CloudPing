@@ -1,5 +1,5 @@
 # AWSLambda_CloudPing [![Build Status](https://travis-ci.org/chriselsen/AWSLambda_CloudPing.svg?branch=master)](https://travis-ci.org/chriselsen/AWSLambda_CloudPing)
-AWS Lambda Function to monitor a website's availability via HTTP/HTTPS.
+AWS Lambda Function to monitor a website's availability via HTTP/HTTPS. This can be combined with VPC Endpoint for AWS Lambda to monitor the availability of an AWS Managed NAT Gateway.
 ![Screenshot](https://github.com/chriselsen/AWSLambda_CloudPing/raw/master/AWSLambdaPing.PNG)
 
 **Pre-Requisites:**
