@@ -7,21 +7,21 @@ AWS Lambda Function to monitor a website's availability via HTTP/HTTPS. This can
 
 **How-To:**
 * Create AWS Lambda function
- * Name: LambdaPing
- * Description: Check availability of websites
- * Runtime: Node.js 4.3
- * Handler: index.handler
- * Timeout : 10 sec
- * Source: In file LambdaPing.nodejs
+  * Name: LambdaPing
+  * Description: Check availability of websites
+  * Runtime: Node.js 4.3
+  * Handler: index.handler
+  * Timeout : 10 sec
+  * Source: In file LambdaPing.nodejs
 * Configure AWS CloudWatch event rule as trigger
- * Schedule: Fixed rate of 1 minute
- * Function: Lambda Ping
- * Input: Constant (JSON text)
- * JSON: { "domain": "www.example.com", "protocol": "https", "port": "443", "path": "/web/index.html" }
+  * Schedule: Fixed rate of 1 minute
+  * Function: Lambda Ping
+  * Input: Constant (JSON text)
+  * JSON: { "domain": "www.example.com", "protocol": "https", "port": "443", "path": "/web/index.html" }
 
 **Defaul Settings for JSON:**
- * domain: example.com
- * protocol: https
- * port: 443
- * path: /
- * method: GET
+* domain: example.com
+* protocol: https
+* port: 443
+* path: /
+* method: GET
