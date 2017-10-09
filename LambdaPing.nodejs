@@ -39,7 +39,7 @@ exports.handler = function(event, context, callback) {
 
 function putCloudWatch(Domain, Success, ResponseTime, callback){
     var AWS = require('aws-sdk');
-    AWS.config.region = 'us-west-2';
+    AWS.config.region = process.env.AWS_DEFAULT_REGION;
     var cloudwatch = new AWS.CloudWatch();
     
     var params = {
