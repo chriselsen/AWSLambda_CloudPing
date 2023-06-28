@@ -1,4 +1,4 @@
-# AWSLambda_CloudPing [![Build Status](https://travis-ci.org/chriselsen/AWSLambda_CloudPing.svg?branch=master)](https://travis-ci.org/chriselsen/AWSLambda_CloudPing)
+# AWSLambda_CloudPing
 AWS Lambda Function to monitor a website's availability via HTTP/HTTPS. This can be combined with VPC Endpoint for AWS Lambda to monitor the availability of an AWS Managed NAT Gateway.
 
 It can also be used in combination with [Amazon CloudWatch Alarms](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html) and [Amazon Route 53 health checks that monitor CloudWatch alarms](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-types.html) to react via Route 53 to internal endpoint failures. 
